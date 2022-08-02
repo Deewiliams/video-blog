@@ -1,7 +1,7 @@
-import { useColorModeValue, useColorMode } from '@chakra-ui/react';
+import { useColorModeValue, useColorMode, FormLabel } from '@chakra-ui/react';
 import React, { useState } from 'react'
-import { Flex, Input, Menu, MenuButton, MenuList, MenuItem,Button,Text } from '@chakra-ui/react';
-import { IoChevronDown } from 'react-icons/io5';
+import { Flex, Input, Menu, MenuButton, MenuList, MenuItem, Button, Text, InputGroup, InputLeftElement,Box } from '@chakra-ui/react';
+import { IoChevronDown, IoCloudUpload, IoLocation } from 'react-icons/io5';
 import { categories } from '../data';
 
 const Create = () => {
@@ -10,7 +10,10 @@ const Create = () => {
   const textColor = useColorModeValue("gray.900", "gray.50");
 
   const [title, setTitle] = useState('')
+  const [location, setLocation] = useState('')
   const [category, setCategory] = useState('Choose category')
+  const [videoAsset, setVideoAsset] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   return (
     <Flex
@@ -55,22 +58,77 @@ const Create = () => {
               {category}
             </MenuButton>
             <MenuList zIndex={101} width={'md'} shadow="x1">
-
               {categories && categories.map((category) => (
-                 <MenuItem key={category.id} _hover={{bg: 'blackAlph.300'}}
-                 fontSize={20}
-                 px={4}
-                 onClick={() => setCategory(category.name)}
-                 > 
-                 {category.iconSrc}
-                 <Text fontSize={18} ml={4}>
-                 {category.name}
-                 </Text>
-                 </MenuItem> 
+                <MenuItem key={category.id} _hover={{ bg: 'blackAlph.300' }}
+                  fontSize={20}
+                  px={4}
+                  onClick={() => setCategory(category.name)}
+                >
+                  {category.iconSrc}
+                  <Text fontSize={18} ml={4}>
+                    {category.name}
+                  </Text>
+                </MenuItem>
               ))}
             </MenuList>
           </Menu>
+          <InputGroup mx={6} width='60vw'>
+            <InputLeftElement
+              pointerEvents='none'
+              children={<IoLocation fontSize={25} color={`${colorMode == "dark" ? "#f1f1f1" : "#111s"}`} />}
+            />
+            <Input
+              placeholder='Location'
+              focusBorderColor="gray.400"
+              isRequired
+              errorBorderColor='red'
+              type={'text'}
+              _placeholder={{ color: 'gray.500' }}
+              fontSize={20}
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              fontWeight='medium'
+              varient={"filled"}
+            />
+          </InputGroup>
         </Flex>
+          <Flex 
+          border={"1px"}
+          borderColor="gray.500"
+          height={"400px"}
+          borderStyle="dashed"
+          width="full"
+          borderRadius={'md'}
+          overflow="hidden"
+          postion={"relative"}
+          >
+            {!videoAsset ? <FormLabel width={'full'}>
+              <Flex
+              direction={'column'}
+              alignItems='center'
+              justifyContent={'center'}
+              height='full'
+              width={'full'}
+              >
+                 <Flex
+              direction={'column'}
+              alignItems='center'
+              justifyContent={'center'}
+              height='full'
+              width={'full'}
+              cursor="pointer"
+              >
+                {loading ? (<></>) : (
+                <>
+                <IoCloudUpload fontSize={30} color={`${colorMode == "dark" ? "#f1f1f1" : "#111s"}`}/>
+                </>)}
+                <Text mt={5} fontSize={20} color={textColor}>
+                    Click to upload
+                  </Text>
+              </Flex>
+              </Flex>
+            </FormLabel> : (<Box> Something </Box>)}
+          </Flex>
       </Flex>
     </Flex>
   )
