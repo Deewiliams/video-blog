@@ -9,6 +9,7 @@ const Home = ({ user }) => {
     return (
         <>
             <NavBar user={user} />
+            <Flex width={"full"}>
             <Flex
                 direction={'column'}
                 justifyContent="start"
@@ -30,6 +31,7 @@ const Home = ({ user }) => {
                     <Route path='/videoDetail/:videoId' element={<VideoPin />} />
                     <Route path='/search' element={<Search />} />
                 </Routes>
+            </Flex>
             </Flex>
         </>
     )
