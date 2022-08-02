@@ -8,7 +8,6 @@ import { IoAdd, IoLogOut, IoMoon, IoSearch, IoSunny } from 'react-icons/io5'
 
 const NavBar = ({ user }) => {
     const { colorMode, toggleColorMode } = useColorMode();
-    console.log('user', user?.photoURL);
     const bg = useColorModeValue("gray.600", "gray.300");
     return (
         <Flex
