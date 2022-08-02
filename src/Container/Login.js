@@ -1,9 +1,29 @@
 import { Button, Flex, HStack, Image } from '@chakra-ui/react'
 import React from 'react'
 import background from '../Images/student.jpeg'
-import {FcGoogle} from 'react-icons/fc'
-
+import { FcGoogle } from 'react-icons/fc'
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {doc, getFirestore, setDoc} from 'firebase/firestore'
+import { firebaseApp } from '../firebase'
+import { useNavigate } from 'react-router-dom';
+ 
 const Login = () => {
+    const auth = getAuth(firebaseApp);
+    const provider = new GoogleAuthProvider()
+    const firebaseDb = getFirestore(firebaseApp) 
+    const navigate = useNavigate()
+
+    const login = async () => {
+         const {user} = await signInWithPopup(auth, provider); 
+         const {refreshToken, providerData} = user;
+
+         localStorage.setItem("user", JSON.stringify(providerData));
+         localStorage.setItem("accessToken", JSON.stringify(refreshToken))
+          
+         await setDoc(doc(firebaseDb, 'users', providerData[0].uid),
+          providerData[0])
+          navigate('/', {replace: true})
+    }
     return (
         <Flex
             justifyContent={"center"}
@@ -18,21 +38,20 @@ const Login = () => {
                 height={"full"}
             />
             <Flex
-            position={"absolute"}
-            width={"100vw"}
-            height={"100vh"}
-            bg={"backAlpha.600"}
-            top={0}
-            left={0}
-            justifyContent="center"
-            alignItems={"center"}
-
->
-            <HStack>
-                <Button leftIcon={<FcGoogle fontSize={25} />} colorScheme="whiteAlpha" shadow={"lg"} >
-                    Sign in with Google
-                </Button>
-            </HStack>
+                position={"absolute"}
+                width={"100vw"}
+                height={"100vh"}
+                bg={"backAlpha.600"}
+                top={0}
+                left={0}
+                justifyContent="center"
+                alignItems={"center"}
+            >
+                <HStack>
+                    <Button leftIcon={<FcGoogle fontSize={25} />} colorScheme="whiteAlpha" shadow={"lg"} onClick={() => login()} >
+                        Sign in with Google
+                    </Button>
+                </HStack>
             </Flex>
         </Flex>
     )
