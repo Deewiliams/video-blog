@@ -1,10 +1,14 @@
 // import './App.css';
+import { Routes, Route } from "react-router-dom";
+import Login from "./Container/Login";
+import Home from "./Container/Home";
 
 function App() {
   return (
-    <div className="App">
-    <h1>Hello chakra</h1>
-    </div>
+    <Routes>
+      <Route path="/*" element={<Home />} />
+      <Route path="login" element={<Login />} />
+    </Routes>
   );
 }
 
