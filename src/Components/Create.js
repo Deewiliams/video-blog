@@ -1,10 +1,10 @@
 import { useColorModeValue, useColorMode, FormLabel } from '@chakra-ui/react';
 import React, { useState } from 'react'
-import { Flex, Input, Menu, MenuButton, MenuList, MenuItem, Button, Text, InputGroup, InputLeftElement,Box } from '@chakra-ui/react';
-import { IoChevronDown, IoCloudUpload, IoLocation } from 'react-icons/io5';
+import { Flex, Input, Menu, MenuButton, MenuList, MenuItem, Button, Text, InputGroup, InputLeftElement, Box } from '@chakra-ui/react';
+import { IoChevronDown, IoCloudUpload, IoLocation,IoTrash } from 'react-icons/io5';
 import { categories } from '../data';
 import Spinner from './Spinner';
-import {getStorage, ref, uploadBytesResumable, getDownloadURL,deleteObject } from 'firebase/storage'
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
 import { firebaseApp } from '../firebase';
 
 const Create = () => {
@@ -21,27 +21,36 @@ const Create = () => {
 
   const storage = getStorage(firebaseApp)
 
-const uploadImage = (e) => { 
-setLoading(true)
-const videoFile = e.target.files[0]
+  const uploadImage = (e) => {
+    setLoading(true)
+    const videoFile = e.target.files[0]
 
-const storageRef = ref(storage, `videos/${Date.now()}-${videoFile.name}`);
+    const storageRef = ref(storage, `videos/${Date.now()}-${videoFile.name}`);
 
-const uploadTask =  uploadBytesResumable(storageRef, videoFile);
-uploadTask.on('state_change', (snapshot) => {
-  const uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  setProgress(uploadProgress)
-}, (error) => {
-  console.log(error);
-}, () => {
-  getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-    setVideoAsset(downloadURL)
-    setLoading(false)
-    console.log('downloadurl',downloadURL);
-  })
+    const uploadTask = uploadBytesResumable(storageRef, videoFile);
+    uploadTask.on('state_change', (snapshot) => {
+      const uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      setProgress(uploadProgress)
+    }, (error) => {
+      console.log(error);
+    }, () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        setVideoAsset(downloadURL)
+        setLoading(false)
+        console.log('downloadurl', downloadURL);
+      })
 
-})
-}
+    })
+  }
+
+  const deleteVideo = () => {
+    const deleteRef = ref(storage, videoAsset)
+    deleteObject(deleteRef).then(() => {
+      setVideoAsset(null)
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
 
 
   return (
@@ -121,7 +130,7 @@ uploadTask.on('state_change', (snapshot) => {
             />
           </InputGroup>
         </Flex>
-          <Flex 
+        <Flex
           border={"1px"}
           borderColor="gray.500"
           height={"400px"}
@@ -130,48 +139,79 @@ uploadTask.on('state_change', (snapshot) => {
           borderRadius={'md'}
           overflow="hidden"
           postion={"relative"}
-          >
-            {!videoAsset ? <FormLabel width={'full'}>
+        >
+          {!videoAsset ? <FormLabel width={'full'}>
+            <Flex
+              direction={'column'}
+              alignItems='center'
+              justifyContent={'center'}
+              height='full'
+              width={'full'}
+            >
               <Flex
-              direction={'column'}
-              alignItems='center'
-              justifyContent={'center'}
-              height='full'
-              width={'full'}
-              >
-                 <Flex
-              direction={'column'}
-              alignItems='center'
-              justifyContent={'center'}
-              height='full'
-              width={'full'}
-              cursor="pointer"
+                direction={'column'}
+                alignItems='center'
+                justifyContent={'center'}
+                height='full'
+                width={'full'}
+                cursor="pointer"
               >
                 {loading ? (
-                <Spinner msg={'Uploading Your Video'} progress={progress} />
+                  <Spinner msg={'Uploading Your Video'} progress={progress} />
                 ) : (
-                <>
-                <IoCloudUpload fontSize={30} color={`${colorMode == "dark" ? "#f1f1f1" : "#111s"}`}/>
-                <Text mt={5} fontSize={20} color={textColor}>
-                    Click to upload
-                  </Text>
-                </>)}
+                  <>
+                    <IoCloudUpload fontSize={30} color={`${colorMode == "dark" ? "#f1f1f1" : "#111s"}`} />
+                    <Text mt={5} fontSize={20} color={textColor}>
+                      Click to upload
+                    </Text>
+                  </>)}
               </Flex>
-              </Flex>
-              {
-                !loading && (
-                  <Input
-                    type={'file'}
-                    name='upload-image'
-                    onChange={uploadImage}
-                    style={{width: 0, height : 0}}
-                    accept= "video/mp4,video/x-m4v,video/*"
+            </Flex>
+            {
+              !loading && (
+                <Input
+                  type={'file'}
+                  name='upload-image'
+                  onChange={uploadImage}
+                  style={{ width: 0, height: 0 }}
+                  accept="video/mp4,video/x-m4v,video/*"
 
-                  />
-                )
-              }
-            </FormLabel> : (<Box> Something </Box>)}
+                />
+              )
+            }
+          </FormLabel> : (
+          <Flex 
+          width={'full'}
+          height='full'
+          justifyContent={'center'}
+          alignItems='center'
+          bg="black"
+          position={'relative'}
+          > 
+           <Flex 
+          width={'40px'}
+          height='40px'
+          justifyContent={'center'}
+          alignItems='center'
+          bg="red"
+          position={'absolute'}
+          top={5}
+          right={5}
+          cursor={"pointer"}
+          zIndex={10}
+          rounded='full'
+          onClick={deleteVideo}
+          > 
+          <IoTrash fontSize={20} color='white' /> 
           </Flex>
+          <video
+          src={videoAsset}
+          controls
+          style={{width: '100%', height: '100%'}}
+          /> 
+          </Flex>
+          )}
+        </Flex>
       </Flex>
     </Flex>
   )
