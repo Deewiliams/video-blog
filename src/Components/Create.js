@@ -4,6 +4,8 @@ import { Flex, Input, Menu, MenuButton, MenuList, MenuItem, Button, Text, InputG
 import { IoChevronDown, IoCloudUpload, IoLocation } from 'react-icons/io5';
 import { categories } from '../data';
 import Spinner from './Spinner';
+import {getStorage, ref, uploadBytesResumable, getDownloadURL,deleteObject } from 'firebase/storage'
+import { firebaseApp } from '../firebase';
 
 const Create = () => {
   const { colorMode } = useColorMode();
@@ -14,7 +16,33 @@ const Create = () => {
   const [location, setLocation] = useState('')
   const [category, setCategory] = useState('Choose category')
   const [videoAsset, setVideoAsset] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [progress, setProgress] = useState(50)
+
+  const storage = getStorage(firebaseApp)
+
+const uploadImage = (e) => { 
+setLoading(true)
+const videoFile = e.target.files[0]
+
+const storageRef = ref(storage, `videos/${Date.now()}-${videoFile.name}`);
+
+const uploadTask =  uploadBytesResumable(storageRef, videoFile);
+uploadTask.on('state_change', (snapshot) => {
+  const uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  setProgress(uploadProgress)
+}, (error) => {
+  console.log(error);
+}, () => {
+  getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+    setVideoAsset(downloadURL)
+    setLoading(false)
+    console.log('downloadurl',downloadURL);
+  })
+
+})
+}
+
 
   return (
     <Flex
@@ -120,7 +148,7 @@ const Create = () => {
               cursor="pointer"
               >
                 {loading ? (
-                <Spinner />
+                <Spinner msg={'Uploading Your Video'} progress={progress} />
                 ) : (
                 <>
                 <IoCloudUpload fontSize={30} color={`${colorMode == "dark" ? "#f1f1f1" : "#111s"}`}/>
@@ -128,9 +156,20 @@ const Create = () => {
                     Click to upload
                   </Text>
                 </>)}
-                
               </Flex>
               </Flex>
+              {
+                !loading && (
+                  <Input
+                    type={'file'}
+                    name='upload-image'
+                    onChange={uploadImage}
+                    style={{width: 0, height : 0}}
+                    accept= "video/mp4,video/x-m4v,video/*"
+
+                  />
+                )
+              }
             </FormLabel> : (<Box> Something </Box>)}
           </Flex>
       </Flex>
