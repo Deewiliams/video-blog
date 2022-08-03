@@ -12,6 +12,9 @@ import ReactPlayer from 'react-player'
 import { MdForward10, MdFullscreen, MdOutlineReplay10, MdVolumeOff, MdVolumeUp } from 'react-icons/md'
 import { format } from '../Utils/Help'
 import screenfull from 'screenfull'
+import { getUserInfo } from '../Utils/FetchData'
+
+const avatar = "https://ak.picdn.net/contributors/3038285/avatars/thumb.jpg?t=164360626";
 
 const VideoPinDetails = () => {
     const { colorMode } = useColorMode();
@@ -27,6 +30,7 @@ const VideoPinDetails = () => {
     const [volume, setVolume] = useState(0.5)
     const [played, setPlayed] = useState(0)
     const [seeking, setSeeking] = useState(false)
+    const [userInfo, setUserInfo] = useState(null)
 
     const playerRef = useRef();
     const playerContainer = useRef();
@@ -36,6 +40,10 @@ const VideoPinDetails = () => {
             setIsLoading(true)
             getSpecificVideo(firebaseDb, videoId).then((data) => {
                 setVideoInfo(data)
+                //getting a user information
+                getUserInfo(firebaseDb, data.userId).then((user) => {
+                    setUserInfo(user)
+                })
                 setIsLoading(false)
             })
         }
@@ -220,8 +228,8 @@ const VideoPinDetails = () => {
                                     </Flex>
 
                                     <Image src={logo} width={'100px'} ml='auto' />
-                                    <MdFullscreen fontSize={30} color="#f1f1f1" cursor={'pointer'} 
-                                    onClick={() => {screenfull.toggle(playerContainer.current)}} />
+                                    <MdFullscreen fontSize={30} color="#f1f1f1" cursor={'pointer'}
+                                        onClick={() => { screenfull.toggle(playerContainer.current) }} />
                                 </Flex>
                             </Flex>
                         </Flex>
@@ -230,13 +238,42 @@ const VideoPinDetails = () => {
                     {videoInfo?.description && (
                         <Flex my={6} direction='column' >
                             <Text my={2} fontSize={25} fontWeight='semibold' >
-                            Description
+                                Description
                             </Text>
                             {videoInfo?.description}
                         </Flex>
                     )}
                 </GridItem>
-                <GridItem width={'100%'} colSpan='1' bg='blue' p={2} ></GridItem>
+                <GridItem width={'100%'} colSpan='1' >
+                    {
+                        userInfo && (
+                            <Flex direction={'column'} width={'full'} >
+                                <Flex alignItems={'center'} width={'full'} >
+                                    <Image src={userInfo?.photoURL ? userInfo?.photoURL : avatar}
+                                        rounded='full'
+                                        width={'60px'}
+                                        height={'60px'}
+                                        border='2px'
+                                        minHeight={'60px'}
+                                        minWith={'60px'}
+                                    />
+                                    <Flex direction={'column'} ml={3} >
+                                        <Flex alignItems={'center'} >
+                                            <Text my={2} fontSize={25} fontWeight='semibold' >
+                                                
+                                                {userInfo?.displayName}
+                                            </Text>
+                                        </Flex>
+
+                                    </Flex>
+
+                                </Flex>
+
+                            </Flex>
+                        )
+                    }
+
+                </GridItem>
             </Grid>
         </Flex>
     )
