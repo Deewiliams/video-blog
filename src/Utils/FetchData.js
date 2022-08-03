@@ -20,3 +20,16 @@ export const getUserInfo = async (firebaseDb, userId) => {
         return 'No such Document';
     }
 }
+
+//fetching a specific video details
+
+export const getSpecificVideo = async (firebaseDb, videoId) => {
+    const videoRef = doc(firebaseDb, 'videos', videoId);
+
+    const videoSnap = await getDoc(videoRef);
+    if (videoSnap.exists) {
+        return videoSnap.data();
+    } else {
+        return 'No such Document';
+    }
+}
