@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Flex, Box, Text, GridItem, Grid, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Image } from '@chakra-ui/react'
 import { Link, useParams } from 'react-router-dom'
 import { IoHome, IoPlay, IoPause } from 'react-icons/io5'
@@ -25,7 +25,7 @@ const VideoPinDetails = () => {
     const [isPlaying, setIsPlaying] = useState(false)
     const [muted, setMuted] = useState(false)
     const [volume, setVolume] = useState(0.5)
-    const [played, setPlayed ] = useState(0)
+    const [played, setPlayed] = useState(0)
     const [seeking, setSeeking] = useState(false)
 
     const playerRef = useRef();
@@ -60,7 +60,7 @@ const VideoPinDetails = () => {
     }
 
     const handleProgress = (changeState) => {
-        if(!seeking){
+        if (!seeking) {
             setPlayed(parseFloat(changeState.played / 100) * 100)
         }
 
@@ -86,7 +86,7 @@ const VideoPinDetails = () => {
 
     const elapsedTime = format(currentTime)
     const totalDuration = format(duration)
-    
+
 
     if (isLoding) {
         return <Spinner />
@@ -121,7 +121,7 @@ const VideoPinDetails = () => {
                 </Text>
             </Flex>
             <Grid templateColumns='repeat(3,1fr)' gap={2} width='100%' >
-                <GridItem width={'100%'} colSpan='2' bg='blue' >
+                <GridItem width={'100%'} colSpan='2' >
                     <Flex width={'full'}
                         bg='black'
                         position='relative'
@@ -168,11 +168,11 @@ const VideoPinDetails = () => {
                                 bgGradient="linear(to-t, blackAlpha.900,blackAlpha.500, blackAlpha.50)"
                             >
                                 <Slider aria-label='slider-ex-4' min={0} max={100}
-                                 value ={played * 100}
-                                 onChange={handleSeekingChange}
-                                 onMouseDown= {OnseekMouseDown}
-                                 onChangeEnd={onSeekMouseUp}
-                                  >
+                                    value={played * 100}
+                                    onChange={handleSeekingChange}
+                                    onMouseDown={OnseekMouseDown}
+                                    onChangeEnd={onSeekMouseUp}
+                                >
                                     <SliderTrack bg="teal.50">
                                         <SliderFilledTrack bg="teal.300" />
                                     </SliderTrack>
@@ -220,13 +220,21 @@ const VideoPinDetails = () => {
                                     </Flex>
 
                                     <Image src={logo} width={'100px'} ml='auto' />
-                                    <MdFullscreen fontSize={30} color="#f1f1f1" cursor={'pointer'} onClick={() => {
-                                        screenfull.toggle(playerContainer.current)
-                                      }} />
+                                    <MdFullscreen fontSize={30} color="#f1f1f1" cursor={'pointer'} 
+                                    onClick={() => {screenfull.toggle(playerContainer.current)}} />
                                 </Flex>
                             </Flex>
                         </Flex>
                     </Flex>
+
+                    {videoInfo?.description && (
+                        <Flex my={6} direction='column' >
+                            <Text my={2} fontSize={25} fontWeight='semibold' >
+                            Description
+                            </Text>
+                            {videoInfo?.description}
+                        </Flex>
+                    )}
                 </GridItem>
                 <GridItem width={'100%'} colSpan='1' bg='blue' p={2} ></GridItem>
             </Grid>
