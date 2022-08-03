@@ -5,7 +5,6 @@ import { Routes, Route } from "react-router-dom";
 import { categories } from '../data'
 
 const Home = ({ user }) => {
-    console.log('user', user);
     return (
         <>
             <NavBar user={user} />
