@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Flex, Text, Image } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useColorModeValue, useColorMode } from '@chakra-ui/react'
@@ -6,6 +6,7 @@ import { getUserInfo } from '../Utils/FetchData'
 
 import { getFirestore } from 'firebase/firestore'
 import { firebaseApp } from '../firebase'
+import moment from 'moment'
 
 const VideoPin = ({ feed }) => {
   const firebaseDb = getFirestore(firebaseApp)
@@ -18,11 +19,11 @@ const VideoPin = ({ feed }) => {
   const [userInfo, setUserInfo] = useState(null)
 
   useEffect(() => {
-    if(feed) setUserId(feed.userId);
-    if(userId) getUserInfo(firebaseDb,userId).then((data) => {
+    if (feed) setUserId(feed.userId);
+    if (userId) getUserInfo(firebaseDb, userId).then((data) => {
       setUserInfo(data)
     })
-  },[userId])
+  }, [userId])
   return (
     <Flex
       justifyContent={"space-between"}
@@ -35,7 +36,7 @@ const VideoPin = ({ feed }) => {
       position='relative'
       maxWidth={'300px'}
     >
-      <Link to={''} >
+      <Link to={`/videoDetail/${feed.id}`} >
         <video
           src={feed.videoUrl}
           muted
@@ -58,16 +59,25 @@ const VideoPin = ({ feed }) => {
           alignItems={'center'}
         >
           <Text color={textColor} isTruncated fontSize={20}  >{feed.title}</Text>
-          <Image
-            src={userInfo?.photoURL}
-            rounded='full'
-            width={'50px'}
-            height={'50px'}
-            border='2px'
-            borderColor={bg}
-            mt={'-10'}
-          />
+          <Link to={`/userDetails/${userId}`} >
+            <Image
+              src={userInfo?.photoURL}
+              rounded='full'
+              width={'50px'}
+              height={'50px'}
+              border='2px'
+              borderColor={bg}
+              mt={'-10'}
+            />
+          </Link>
         </Flex>
+        <Text
+          fontSize={12}
+          color={textColor}
+          ml='auto'
+        >
+          {moment(new Date(parseInt(feed.id)).toISOString()).fromNow()}
+        </Text>
       </Flex>
 
     </Flex>
