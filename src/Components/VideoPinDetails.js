@@ -12,7 +12,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { IoHome, IoPlay, IoPause, IoTrash } from 'react-icons/io5'
 import { getFirestore } from 'firebase/firestore'
 import { firebaseApp } from '../firebase'
-import { deleteVideo, getSpecificVideo } from '../Utils/FetchData'
+import { deleteVideo, getSpecificVideo, recommendedFeed } from '../Utils/FetchData'
 import { fetchUserInfo } from '../Utils/FetchUser'
 import { useColorModeValue, useColorMode } from '@chakra-ui/react'
 import logo from '../Images/logo.png'
@@ -25,6 +25,7 @@ import { getUserInfo } from '../Utils/FetchData'
 import { FcApproval } from 'react-icons/fc'
 import moment from 'moment'
 import { async } from '@firebase/util'
+import RecommendedVideo from './RecommendedVideo'
 
 const avatar = "https://ak.picdn.net/contributors/3038285/avatars/thumb.jpg?t=164360626";
 
@@ -46,6 +47,7 @@ const VideoPinDetails = () => {
     const [played, setPlayed] = useState(0)
     const [seeking, setSeeking] = useState(false)
     const [userInfo, setUserInfo] = useState(null)
+    const [feeds, setFeeds] = useState(null)
 
     const playerRef = useRef();
     const playerContainer = useRef();
@@ -55,6 +57,11 @@ const VideoPinDetails = () => {
             setIsLoading(true)
             getSpecificVideo(firebaseDb, videoId).then((data) => {
                 setVideoInfo(data)
+
+                recommendedFeed(firebaseDb, data.category, videoId).then((feed) => {
+                    setFeeds(feed)
+                })
+
                 //getting a user information
                 getUserInfo(firebaseDb, data.userId).then((user) => {
                     setUserInfo(user)
@@ -319,7 +326,7 @@ const VideoPinDetails = () => {
                                     mt={'0'}
                                     width={'48'}
                                     >
-                                        Download video
+                                    Download video
                                     </Button>
                                     </a>
                                 </Flex>
@@ -328,6 +335,21 @@ const VideoPinDetails = () => {
                     }
                 </GridItem>
             </Grid>
+            {
+                feeds && (
+                    <Flex 
+                    direction={"column"}
+                     width="full"
+                     my={6}
+                    > 
+                    <Text my={4} fontSize={25} fontWeight='semibold' >
+                        Recommended Videos
+                    </Text>
+                    <RecommendedVideo feeds={feeds} />
+                    </Flex>
+
+                )
+            }
         </Flex>
     )
 }

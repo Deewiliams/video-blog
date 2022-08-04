@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 
 
 //fetching all docs from firebase database
@@ -6,6 +6,16 @@ export const getAllFeeds = async (firebaseDb) => {
     const feeds = await getDocs(query(collection(firebaseDb, 'videos'), orderBy('id', 'desc')));
     return feeds.docs.map((doc) => doc.data());
 }
+
+//Getting recommended feeds
+export const recommendedFeed = async (firebaseDb, categoryId, videoId) => {
+    const feeds = await getDocs(query(collection(firebaseDb, 'videos'),
+    where("category", "==", categoryId),
+    where("id", "!=" , videoId),
+    orderBy('id', 'desc')));
+    return feeds.docs.map((doc) => doc.data());
+}
+
 
 //fetching a user information by userId
 
@@ -19,6 +29,8 @@ export const getUserInfo = async (firebaseDb, userId) => {
         return 'No such Document';
     }
 }
+
+
 
 //fetching a specific video details
 
