@@ -1,6 +1,6 @@
 import { Button, Flex, HStack, Image } from '@chakra-ui/react'
 import React from 'react'
-import background from '../Images/student.jpeg'
+import background from '../Images/dark.jpeg'
 import { FcGoogle } from 'react-icons/fc'
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {doc, getFirestore, setDoc} from 'firebase/firestore'
@@ -48,7 +48,7 @@ const Login = () => {
                 alignItems={"center"}
             >
                 <HStack>
-                    <Button leftIcon={<FcGoogle fontSize={25} />} colorScheme="whiteAlpha" shadow={"lg"} onClick={() => login()} >
+                    <Button leftIcon={<FcGoogle fontSize={25} />} colorScheme="whiteAlpha" color="#f1f1f1" shadow={"lg"} onClick={() => login()} >
                         Sign in with Google
                     </Button>
                 </HStack>

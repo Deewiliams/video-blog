@@ -1,8 +1,8 @@
 // import './App.css';
 import React, {useEffect, useState} from  "react"
 import { Routes, Route , useNavigate} from "react-router-dom";
-import Login from "./Container/Login";
-import Home from "./Container/Home";
+import Login from "./Pages/Login";
+import Home from "./Pages/Home";
 import {userAccessToken,fetchUserInfo} from "../src/Utils/FetchUser"
 
 function App() {

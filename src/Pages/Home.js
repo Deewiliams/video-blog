@@ -1,11 +1,10 @@
 import React from 'react'
 import { Flex } from '@chakra-ui/react';
-import { Category, NavBar, Feed, Create, VideoPin, Search } from '../Components/Index';
+import { Category, NavBar, Feed, Create, Search,VideoPinDetails, UserProfile } from '../Components/Index';
 import { Routes, Route } from "react-router-dom";
 import { categories } from '../data'
 
 const Home = ({ user }) => {
-    console.log('user', user);
     return (
         <>
             <NavBar user={user} />
@@ -28,8 +27,9 @@ const Home = ({ user }) => {
                     <Route path='/' element={<Feed />} />
                     <Route path='/category/:categoryId' element={<Feed />} />
                     <Route path='/create' element={<Create />} />
-                    <Route path='/videoDetail/:videoId' element={<VideoPin />} />
+                    <Route path='/videoDetail/:videoId' element={<VideoPinDetails />} />
                     <Route path='/search' element={<Search />} />
+                    <Route path='/userDetails/:userId' element={<UserProfile />} />
                 </Routes>
             </Flex>
             </Flex>
