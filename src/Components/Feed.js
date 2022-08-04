@@ -6,6 +6,7 @@ import Spinner from './Spinner'
 import { SimpleGrid } from '@chakra-ui/react'
 import VideoPin from './VideoPin'
 import { useParams } from 'react-router-dom'
+import NotFound from './NotFound'
 
 const Feed = () => {
   const firebaseDb = getFirestore(firebaseApp)
@@ -33,8 +34,14 @@ const Feed = () => {
   }, [categoryId])
 
   if (loading) {
-    return <Spinner />
+    return <Spinner msg={'Loading your feeds'} />
   }
+
+  if (!feeds?.length > 0) {
+   return <NotFound />
+  }
+
+
   return (
     <SimpleGrid minChildWidth='300px' spacing='15px' width={'full'} alignItems="center" autoColumns={'max-content'} px='2' overflow={'hidden'} >
       {feeds && feeds.map((feed) => (
