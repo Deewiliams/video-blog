@@ -1,10 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Flex, Box, Text, GridItem, Grid, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Image } from '@chakra-ui/react'
-import { Link, useParams } from 'react-router-dom'
-import { IoHome, IoPlay, IoPause } from 'react-icons/io5'
+import {
+    Flex, Box, Text, GridItem, Grid, Slider, SliderTrack, SliderFilledTrack, SliderThumb,
+    Image, Popover, Button, PopoverCloseButton,
+    PopoverContent, PopoverTrigger, PopoverArrow,
+    PopoverHeader,
+    PopoverBody,
+    PopoverFooter,
+    ButtonGroup
+} from '@chakra-ui/react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { IoHome, IoPlay, IoPause, IoTrash } from 'react-icons/io5'
 import { getFirestore } from 'firebase/firestore'
 import { firebaseApp } from '../firebase'
-import { getSpecificVideo } from '../Utils/FetchData'
+import { deleteVideo, getSpecificVideo } from '../Utils/FetchData'
+import { fetchUserInfo } from '../Utils/FetchUser'
 import { useColorModeValue, useColorMode } from '@chakra-ui/react'
 import logo from '../Images/logo.png'
 import Spinner from './Spinner'
@@ -13,6 +22,9 @@ import { MdForward10, MdFullscreen, MdOutlineReplay10, MdVolumeOff, MdVolumeUp }
 import { format } from '../Utils/Help'
 import screenfull from 'screenfull'
 import { getUserInfo } from '../Utils/FetchData'
+import { FcApproval } from 'react-icons/fc'
+import moment from 'moment'
+import { async } from '@firebase/util'
 
 const avatar = "https://ak.picdn.net/contributors/3038285/avatars/thumb.jpg?t=164360626";
 
@@ -21,8 +33,11 @@ const VideoPinDetails = () => {
     const bg = useColorModeValue("gray.600", "gray.300");
     const textColor = useColorModeValue("gray.600", "gray.300");
     const { videoId } = useParams();
+    const navigate = useNavigate();
 
     const firebaseDb = getFirestore(firebaseApp)
+    const [localUser] = fetchUserInfo()
+
     const [isLoding, setIsLoading] = useState(false)
     const [videoInfo, setVideoInfo] = useState(null)
     const [isPlaying, setIsPlaying] = useState(false)
@@ -86,7 +101,7 @@ const VideoPinDetails = () => {
     const onSeekMouseUp = (e) => {
         setSeeking(false)
         playerRef.current.seekTo(e / 100)
-    }
+    } 
 
     const currentTime = playerRef.current ? playerRef.current.getCurrentTime() : '00:00';
 
@@ -95,6 +110,11 @@ const VideoPinDetails = () => {
     const elapsedTime = format(currentTime)
     const totalDuration = format(duration)
 
+    const deleteUploadedVideo = async (videoId) => {
+        setIsLoading(true)
+        deleteVideo(firebaseDb, videoId);
+        navigate('/', {replace: true})
+    }
 
     if (isLoding) {
         return <Spinner />
@@ -260,19 +280,43 @@ const VideoPinDetails = () => {
                                     <Flex direction={'column'} ml={3} >
                                         <Flex alignItems={'center'} >
                                             <Text my={2} fontSize={25} fontWeight='semibold' >
-                                                
                                                 {userInfo?.displayName}
                                             </Text>
+                                            <FcApproval fontSize={30} />
                                         </Flex>
-
+                                        <Text fontSize={12} mt={-3}>
+                                            {moment(new Date(parseInt(videoInfo.id)).toISOString()).fromNow()}
+                                        </Text>
                                     </Flex>
-
                                 </Flex>
-
+                                <Flex justifyContent={'space-around'} mt={6} >
+                                    {userInfo?.uid === localUser.uid && (
+                                        <Popover closeOnEsc>
+                                            <PopoverTrigger>
+                                                <Button colorScheme={'red'}
+                                                >
+                                                    <IoTrash fontSize={25} color="#fff" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent>
+                                                <PopoverArrow />
+                                                <PopoverCloseButton />
+                                                <PopoverHeader>Confirmation!</PopoverHeader>
+                                                <PopoverBody>Are you sure you want to delete your video? </PopoverBody>
+                                                <PopoverFooter display='flex' justifyContent='flex-end'>
+                                                    <ButtonGroup size='sm'>
+                                                        <Button variant='outline'>Cancel</Button>
+                                                        <Button colorScheme='red' 
+                                                    onClick={() => deleteUploadedVideo(videoId)}>Yes</Button>
+                                                    </ButtonGroup>
+                                                </PopoverFooter>
+                                            </PopoverContent>
+                                        </Popover>
+                                    )}
+                                </Flex>
                             </Flex>
                         )
                     }
-
                 </GridItem>
             </Grid>
         </Flex>

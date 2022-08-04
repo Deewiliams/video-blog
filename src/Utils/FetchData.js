@@ -1,5 +1,5 @@
 import { async } from "@firebase/util";
-import { collection, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
 
 
 //fetching all docs from firebase database
@@ -32,4 +32,8 @@ export const getSpecificVideo = async (firebaseDb, videoId) => {
     } else {
         return 'No such Document';
     }
+} 
+
+export const deleteVideo = async (firebaseDb, videoId) => {
+    await deleteDoc(doc(firebaseDb, 'videos', videoId))
 }
