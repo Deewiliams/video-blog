@@ -7,6 +7,14 @@ export const getAllFeeds = async (firebaseDb) => {
     return feeds.docs.map((doc) => doc.data());
 }
 
+//Category feeds
+export const categoryFeeds = async (firebaseDb, categoryId) => {
+    const feeds = await getDocs(query(collection(firebaseDb, 'videos'),
+    where("category", "==", categoryId),
+    orderBy('id', 'desc')));
+    return feeds.docs.map((doc) => doc.data());
+}
+
 //Getting recommended feeds
 export const recommendedFeed = async (firebaseDb, categoryId, videoId) => {
     const feeds = await getDocs(query(collection(firebaseDb, 'videos'),
@@ -16,9 +24,16 @@ export const recommendedFeed = async (firebaseDb, categoryId, videoId) => {
     return feeds.docs.map((doc) => doc.data());
 }
 
+//user uplaoded videos
+export const userUploadedVideos = async (firebaseDb,userId) => {
+    const feeds = await getDocs(query(collection(firebaseDb, 'videos'),
+    where('userId', '==', userId ),orderBy('id', 'desc')));
+    return feeds.docs.map((doc) => doc.data());
+}
+
+
 
 //fetching a user information by userId
-
 export const getUserInfo = async (firebaseDb, userId) => {
     const userRef = doc(firebaseDb, 'users', userId);
 

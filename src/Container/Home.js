@@ -29,7 +29,7 @@ const Home = ({ user }) => {
                     <Route path='/create' element={<Create />} />
                     <Route path='/videoDetail/:videoId' element={<VideoPinDetails />} />
                     <Route path='/search' element={<Search />} />
-                    <Route path='/userDetails/:userProfile' element={<UserProfile />} />
+                    <Route path='/userDetails/:userId' element={<UserProfile />} />
                 </Routes>
             </Flex>
             </Flex>

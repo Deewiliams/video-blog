@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { getFirestore } from 'firebase/firestore'
 import { firebaseApp } from '../firebase'
-import { getAllFeeds } from '../Utils/FetchData'
+import { getAllFeeds,categoryFeeds} from '../Utils/FetchData'
 import Spinner from './Spinner'
 import { SimpleGrid } from '@chakra-ui/react'
 import VideoPin from './VideoPin'
+import { useParams } from 'react-router-dom'
 
 const Feed = () => {
   const firebaseDb = getFirestore(firebaseApp)
@@ -12,15 +13,24 @@ const Feed = () => {
   const [feeds, setFeeds] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const {categoryId} = useParams()
+
 
   useEffect(() => {
     setLoading(true)
-    getAllFeeds(firebaseDb).then((data) => {
-      setFeeds(data)
-      console.log(data);
-      setLoading(false)
-    })
-  }, [])
+    if(categoryId){
+      categoryFeeds(firebaseDb, categoryId).then((category) => {
+        setFeeds(category)
+        setLoading(false)
+      })
+    }else {
+      getAllFeeds(firebaseDb).then((data) => {
+        setFeeds(data)
+        setLoading(false)
+      })
+    }
+    
+  }, [categoryId])
 
   if (loading) {
     return <Spinner />

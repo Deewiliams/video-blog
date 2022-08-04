@@ -2,7 +2,7 @@ import React from 'react'
 import logo from '../Images/logo.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { useColorModeValue, useColorMode } from '@chakra-ui/react'
-import { Flex, Image, InputGroup, InputLeftElement, Input, MenuButton, MenuList, Menu, MenuItem, Button } from '@chakra-ui/react'
+import { Flex, Image, InputGroup, InputLeftElement, Input, MenuButton, MenuList, Menu, MenuItem } from '@chakra-ui/react'
 import { IoAdd, IoLogOut, IoMoon, IoSearch, IoSunny } from 'react-icons/io5'
 
 
@@ -33,7 +33,6 @@ const NavBar = ({ user }) => {
                     varient={"filled"}
                 />
             </InputGroup>
-
             <Flex justifyContent={'center'} alignItems='center'>
                 <Flex
                     width={"40px"}
@@ -45,7 +44,6 @@ const NavBar = ({ user }) => {
                 >
                     {colorMode == 'light' ? (<IoMoon fontSize={25} />) : (<IoSunny fontSize={25} />)}
                 </Flex>
-
                 <Link to={'/create'}>
                     <Flex justifyContent={"center"}
                         alignItems="center" bg={bg}
@@ -61,7 +59,6 @@ const NavBar = ({ user }) => {
                         <IoAdd fontSize={25} color={`${colorMode == 'dark' ? '#111' : '#f1f1f1'}`} />
                     </Flex>
                 </Link>
-
                 <Menu>
                     <MenuButton>
                         <Image src={user?.photoURL}
@@ -70,7 +67,7 @@ const NavBar = ({ user }) => {
                             rounded="full" />
                     </MenuButton>
                     <MenuList>
-                        <Link to={''}>
+                        <Link to={`/userDetails/${user?.uid}`}>
                             <MenuItem>My Account</MenuItem>
                         </Link>
                         <MenuItem

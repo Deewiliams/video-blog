@@ -16,6 +16,7 @@ const Login = () => {
     const login = async () => {
          const {user} = await signInWithPopup(auth, provider); 
          const {refreshToken, providerData} = user;
+         console.log('user',user);
 
          localStorage.setItem("user", JSON.stringify(providerData));
          localStorage.setItem("accessToken", JSON.stringify(refreshToken))
@@ -48,7 +49,7 @@ const Login = () => {
                 alignItems={"center"}
             >
                 <HStack>
-                    <Button leftIcon={<FcGoogle fontSize={25} />} colorScheme="whiteAlpha" shadow={"lg"} onClick={() => login()} >
+                    <Button leftIcon={<FcGoogle fontSize={25} />} colorScheme="whiteAlpha" color="#f1f1f1" shadow={"lg"} onClick={() => login()} >
                         Sign in with Google
                     </Button>
                 </HStack>
