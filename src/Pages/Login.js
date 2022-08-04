@@ -1,6 +1,6 @@
 import { Button, Flex, HStack, Image } from '@chakra-ui/react'
 import React from 'react'
-import background from '../Images/student.jpeg'
+import background from '../Images/dark.jpeg'
 import { FcGoogle } from 'react-icons/fc'
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {doc, getFirestore, setDoc} from 'firebase/firestore'
