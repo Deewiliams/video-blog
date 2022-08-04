@@ -1,6 +1,6 @@
 import React from 'react'
 import logo from '../Images/logo.png'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useColorModeValue, useColorMode } from '@chakra-ui/react'
 import { Flex, Image, InputGroup, InputLeftElement, Input, MenuButton, MenuList, Menu, MenuItem, Button } from '@chakra-ui/react'
 import { IoAdd, IoLogOut, IoMoon, IoSearch, IoSunny } from 'react-icons/io5'
@@ -8,9 +8,11 @@ import { IoAdd, IoLogOut, IoMoon, IoSearch, IoSunny } from 'react-icons/io5'
 
 const NavBar = ({ user }) => {
     const { colorMode, toggleColorMode } = useColorMode();
+
+   const navigate = useNavigate()
     const bg = useColorModeValue("gray.600", "gray.300");
     return (
-        <Flex
+        <Flex 
             justifyContent={'space-between'}
             alignItems='center'
             width={'100vw'}
@@ -71,15 +73,17 @@ const NavBar = ({ user }) => {
                         <Link to={''}>
                             <MenuItem>My Account</MenuItem>
                         </Link>
-                        <MenuItem 
-                        flexDirection={'row '}
-                        alignItems="center"
-                        gap={4}
+                        <MenuItem
+                            flexDirection={'row '}
+                            alignItems="center"
+                            gap={4}
+                            onClick={() => {
+                                localStorage.clear()
+                                navigate('/login', {replace: true})
+                            }}
                         >Logout <IoLogOut fontSize={20} /> </MenuItem>
                     </MenuList>
                 </Menu>
-
-
             </Flex>
         </Flex>
     )
