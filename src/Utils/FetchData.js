@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
 
 

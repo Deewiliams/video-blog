@@ -254,7 +254,6 @@ const VideoPinDetails = () => {
                             </Flex>
                         </Flex>
                     </Flex>
-
                     {videoInfo?.description && (
                         <Flex my={6} direction='column' >
                             <Text my={2} fontSize={25} fontWeight='semibold' >
@@ -313,6 +312,16 @@ const VideoPinDetails = () => {
                                             </PopoverContent>
                                         </Popover>
                                     )}
+                                    <a href={videoInfo.videoUrl} download onClick={(e) => e.stopPropagation()} > 
+                                    <Button
+                                    colorScheme={'whatsapp'}
+                                    my={2}
+                                    mt={'0'}
+                                    width={'48'}
+                                    >
+                                        Download video
+                                    </Button>
+                                    </a>
                                 </Flex>
                             </Flex>
                         )
