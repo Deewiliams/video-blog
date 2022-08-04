@@ -1,9 +1,8 @@
 import React from 'react'
-import { Flex, useColorMode, useColorModeValue, Box, Tooltip } from '@chakra-ui/react';
+import { Flex,useColorModeValue, Box, Tooltip } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 const Category = ({ data }) => {
-  const { colorMode } = useColorMode();
   const bg = useColorModeValue("gray.600", "gray.300");
 
   return (
@@ -18,7 +17,6 @@ const Category = ({ data }) => {
           </Box>
         </Tooltip>
       </Link>
-
     </Flex>
   )
 }

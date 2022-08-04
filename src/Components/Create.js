@@ -1,6 +1,6 @@
 import { useColorModeValue, useColorMode, FormLabel } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react'
-import { Flex, Input, Menu, MenuButton, MenuList, MenuItem, Button, Text, InputGroup, InputLeftElement, Textarea, Box } from '@chakra-ui/react';
+import React, { useState } from 'react'
+import { Flex, Input, Menu, MenuButton, MenuList, MenuItem, Button, Text, InputGroup, InputLeftElement, Textarea } from '@chakra-ui/react';
 import { IoCheckmark, IoChevronDown, IoCloudUpload, IoLocation, IoTrash, IoWarning } from 'react-icons/io5';
 import { categories } from '../data';
 import Spinner from './Spinner';
@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Create = () => {
   const { colorMode } = useColorMode();
-  const bg = useColorModeValue("gray.50", "gray.900");
   const textColor = useColorModeValue("gray.900", "gray.50");
 
   const [title, setTitle] = useState('')
@@ -71,7 +70,7 @@ const Create = () => {
         setAlert(false)
       }, 4000)
     }).catch((error) => {
-      console.log(error);
+      throw(error);
     })
   }
 
@@ -102,13 +101,11 @@ const Create = () => {
         navigate('/', { replace: true })
       }
     } catch (error) {
-      console.log(error);
+      throw(error);
     }
   }
 
-  useEffect(() => {
 
-  }, [videoAsset])
 
 
   return (
@@ -175,7 +172,7 @@ const Create = () => {
           <InputGroup mx={6} width='60vw'>
             <InputLeftElement
               pointerEvents='none'
-              children={<IoLocation fontSize={25} color={`${colorMode == "dark" ? "#f1f1f1" : "#111s"}`} />}
+              children={<IoLocation fontSize={25} color={`${colorMode === "dark" ? "#f1f1f1" : "#111s"}`} />}
             />
             <Input
               placeholder='Location'
@@ -222,7 +219,7 @@ const Create = () => {
                   <Spinner msg={'Uploading Your Video'} progress={progress} />
                 ) : (
                   <>
-                    <IoCloudUpload fontSize={30} color={`${colorMode == "dark" ? "#f1f1f1" : "#111s"}`} />
+                    <IoCloudUpload fontSize={30} color={`${colorMode === "dark" ? "#f1f1f1" : "#111s"}`} />
                     <Text mt={5} fontSize={20} color={textColor}>
                       Click to upload
                     </Text>

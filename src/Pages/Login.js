@@ -16,7 +16,6 @@ const Login = () => {
     const login = async () => {
          const {user} = await signInWithPopup(auth, provider); 
          const {refreshToken, providerData} = user;
-         console.log('user',user);
 
          localStorage.setItem("user", JSON.stringify(providerData));
          localStorage.setItem("accessToken", JSON.stringify(refreshToken))

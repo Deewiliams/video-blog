@@ -41,7 +41,6 @@ const Feed = () => {
    return <NotFound />
   }
 
-
   return (
     <SimpleGrid minChildWidth='300px' spacing='15px' width={'full'} alignItems="center" autoColumns={'max-content'} px='2' overflow={'hidden'} >
       {feeds && feeds.map((feed) => (

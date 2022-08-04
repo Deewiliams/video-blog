@@ -9,17 +9,17 @@ import { IoAdd, IoLogOut, IoMoon, IoSearch, IoSunny } from 'react-icons/io5'
 const NavBar = ({ user }) => {
     const { colorMode, toggleColorMode } = useColorMode();
 
-   const navigate = useNavigate()
+    const navigate = useNavigate()
     const bg = useColorModeValue("gray.600", "gray.300");
     return (
-        <Flex 
+        <Flex
             justifyContent={'space-between'}
             alignItems='center'
             width={'100vw'}
             p={4}
         >
             <Link to={'/'} >
-                <Image src={colorMode == 'light ' ? 'vision creation' : logo} width={'180px'} />
+                <Image src={colorMode === 'light ' ? logo : logo} width={'180px'} />
             </Link>
 
             <InputGroup mx={6} width='60vw'>
@@ -42,7 +42,7 @@ const NavBar = ({ user }) => {
                     borderRadius='5px'
                     onClick={toggleColorMode}
                 >
-                    {colorMode == 'light' ? (<IoMoon fontSize={25} />) : (<IoSunny fontSize={25} />)}
+                    {colorMode === 'light' ? (<IoMoon fontSize={25} />) : (<IoSunny fontSize={25} />)}
                 </Flex>
                 <Link to={'/create'}>
                     <Flex justifyContent={"center"}
@@ -56,7 +56,7 @@ const NavBar = ({ user }) => {
                         transition="ease-in-out"
                         transitionDuration={"0.3s"}
                     >
-                        <IoAdd fontSize={25} color={`${colorMode == 'dark' ? '#111' : '#f1f1f1'}`} />
+                        <IoAdd fontSize={25} color={`${colorMode === 'dark' ? '#111' : '#f1f1f1'}`} />
                     </Flex>
                 </Link>
                 <Menu>
@@ -76,7 +76,7 @@ const NavBar = ({ user }) => {
                             gap={4}
                             onClick={() => {
                                 localStorage.clear()
-                                navigate('/login', {replace: true})
+                                navigate('/login', { replace: true })
                             }}
                         >Logout <IoLogOut fontSize={20} /> </MenuItem>
                     </MenuList>
